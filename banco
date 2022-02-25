@@ -1,0 +1,37 @@
+package contas
+
+type ContaCorrente struct {
+	Titular       string
+	NumeroAgencia int
+	NumeroConta   int
+	Saldo         float64
+}
+
+func (c *ContaCorrente) Sacar(valorDoSaque float64) (string, float64) {
+	podeSacar := valorDoSaque > 0 && valorDoSaque <= c.Saldo
+	if podeSacar {
+		c.Saldo -= valorDoSaque
+		return "Saque realizado com sucesso de : ", valorDoSaque
+	} else {
+		return "Saldo insuficiente. ", c.Saldo
+	}
+}
+func (c *ContaCorrente) Depositar(valorDeposito float64) (string, float64) {
+	valorDoDeposito := valorDeposito > 0
+	if valorDoDeposito {
+		c.Saldo += valorDeposito
+		return "Deposito realizado com sucesso." + " Valor disponivel: ", c.Saldo
+	} else {
+		return "Deposito menor que zero", c.Saldo
+	}
+}
+func (c *ContaCorrente) Transferir(valorDaTransferencia float64, contaDestino *ContaCorrente) string {
+	valorTransferido := valorDaTransferencia > 0 && valorDaTransferencia < c.Saldo
+	if valorTransferido {
+		c.Saldo = c.Saldo - valorDaTransferencia
+		contaDestino.Depositar(valorDaTransferencia)
+		return "Transferencia realizada com sucesso."
+	} else {
+		return "valor de transferencia é maior que o Saldo na conta."
+	}
+}
